@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "api/revamp.js": { "maxDuration": 60 },
+    "api/new.js": { "maxDuration": 60 },
+    "api/edit.js": { "maxDuration": 60 },
+    "api/regenerate.js": { "maxDuration": 60 },
+    "api/dashboard.js": { "maxDuration": 60 },
+    "api/chat.js": { "maxDuration": 30 }
+  }
+}

@@ -231,8 +231,14 @@ export default function Sidebar({
     const res = await fetch(`${API}/${endpoint}`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
     })
-    const data = await res.json()
-    if (!res.ok) throw new Error(data.error)
+    let data
+    try {
+      data = await res.json()
+    } catch {
+      const text = await res.text().catch(() => 'Unknown error')
+      throw new Error(res.status === 504 ? 'Request timed out — please try again' : text || `Server error (${res.status})`)
+    }
+    if (!res.ok) throw new Error(data.error || `Server error (${res.status})`)
     return data
   }
 
