@@ -162,11 +162,13 @@ const s = {
 }
 
 export default function Sidebar({
+  mode, setMode,
   setPreviewHtml, setPreviewImage, setPreviewUrl,
+  setDashHtml, setDashInitialAnalysis, setDashDataSummary,
   loading, setLoading, error, setError,
   projectId, setProjectId, screenId, setScreenId,
 }) {
-  const [mode, setMode] = useState('revamp')
+  // mode is lifted to App
   const [url, setUrl] = useState('')
   const [businessName, setBusinessName] = useState('')
   const [businessDesc, setBusinessDesc] = useState('')
@@ -188,8 +190,6 @@ export default function Sidebar({
   const [dataFile, setDataFile] = useState(null)
   const [dataDragging, setDataDragging] = useState(false)
   const [dashboardType, setDashboardType] = useState('Analytics')
-  const [chartPref, setChartPref] = useState('Auto')
-  const [timeGranularity, setTimeGranularity] = useState('Monthly')
   const [showKpis, setShowKpis] = useState(true)
   const [dashDensity, setDashDensity] = useState('comfortable')
   const [dashTheme, setDashTheme] = useState('light')
@@ -264,9 +264,11 @@ export default function Sidebar({
   async function handleDashboard() {
     if (!dataFile) return
     await run(async () => {
-      const data = await post('dashboard', { fileData: dataFile.base64, fileName: dataFile.name, dashboardType, chartPreference: chartPref, timeGranularity, showKpis, density: dashDensity, theme: dashTheme, prompt })
-      setPreviewHtml(data.htmlContent); if (data.imageUrl) setPreviewImage(data.imageUrl)
-      setPreviewUrl(`${dashboardType.toLowerCase()}-dashboard`); setHasResult(true)
+      const data = await post('dashboard', { fileData: dataFile.base64, fileName: dataFile.name, dashboardType, density: dashDensity, theme: dashTheme, showKpis, prompt })
+      setDashHtml(data.htmlContent)
+      setDashInitialAnalysis(data.initialAnalysis)
+      setDashDataSummary(data.dataSummary)
+      setHasResult(true)
     })
   }
 
@@ -369,20 +371,6 @@ export default function Sidebar({
               <label style={s.label}>Dashboard Type</label>
               <div style={s.chipRow}>
                 {DASHBOARD_TYPES.map(t => <button key={t} onClick={() => setDashboardType(t)} style={s.chip(dashboardType === t)}>{t}</button>)}
-              </div>
-            </div>
-
-            <div style={s.section}>
-              <label style={s.label}>Chart Style</label>
-              <div style={s.segRow}>
-                {CHART_PREFS.map(t => <button key={t} onClick={() => setChartPref(t)} style={s.seg(chartPref === t)}>{t}</button>)}
-              </div>
-            </div>
-
-            <div style={s.section}>
-              <label style={s.label}>Time Granularity</label>
-              <div style={s.segRow}>
-                {TIME_GRANULARITY.map(t => <button key={t} onClick={() => setTimeGranularity(t)} style={s.seg(timeGranularity === t)}>{t}</button>)}
               </div>
             </div>
 
