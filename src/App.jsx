@@ -9,9 +9,10 @@ export default function App() {
   const [error, setError] = useState(null)
   const [projectId, setProjectId] = useState(null)
   const [screenId, setScreenId] = useState(null)
+  const [previewUrl, setPreviewUrl] = useState('')
 
   return (
-    <div className="flex h-screen bg-gray-950 text-white">
+    <div style={{ display: 'flex', height: '100vh', background: '#080a0f' }}>
       <Sidebar
         setPreviewHtml={setPreviewHtml}
         setPreviewImage={setPreviewImage}
@@ -23,8 +24,14 @@ export default function App() {
         setProjectId={setProjectId}
         screenId={screenId}
         setScreenId={setScreenId}
+        setPreviewUrl={setPreviewUrl}
       />
-      <Preview html={previewHtml} image={previewImage} loading={loading} />
+      <Preview
+        html={previewHtml}
+        image={previewImage}
+        loading={loading}
+        previewUrl={previewUrl}
+      />
     </div>
   )
 }
