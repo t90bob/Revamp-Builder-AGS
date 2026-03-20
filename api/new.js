@@ -12,15 +12,13 @@ export default async function handler(req, res) {
     const stitch = new Stitch(stitchClient)
 
     const pageList = pages?.length ? pages.join(', ') : 'Home'
-    const stitchPrompt = `Design a brand new, modern, professional website for the following business.
-
-Business name: ${businessName}
-${businessDesc ? `Description: ${businessDesc}` : ''}
-Pages to design: ${pageList}
-
-${prompt ? `Additional instructions: ${prompt}` : ''}
-
-Create a full, beautiful ${(deviceType || 'DESKTOP').toLowerCase()} website design with all the sections a real business site would have.`
+    const stitchPrompt = `Design a modern, professional website.
+Business: ${businessName}
+${businessDesc ? `About: ${businessDesc}` : ''}
+Pages: ${pageList}
+${prompt ? `Style: ${prompt}` : ''}
+${logoDataUrl ? 'Include a prominent logo in the header.' : ''}
+Create a full ${(deviceType || 'DESKTOP').toLowerCase()} website.`
 
     const project = await stitch.createProject(`New Site: ${businessName}`)
     const screen = await project.generate(stitchPrompt, deviceType || 'DESKTOP')

@@ -51,18 +51,19 @@ export default async function handler(req, res) {
       }
     }
 
-    const stitchPrompt = `Revamp this website as a modern, clean, professional design.
+    // Summarize content to keep prompt focused
+    const contentSummary = content
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 800)
 
-Website title: ${title}
-Website URL: ${url}
-
-Content:
-${content.slice(0, 3000)}
-
-${prompt ? `Additional instructions: ${prompt}` : ''}
-${logoDataUrl ? 'A custom logo image has been provided — include a prominent logo placement in the header.' : ''}
-
-Create a full, beautiful desktop website design.`
+    const stitchPrompt = `Revamp this website with a modern, clean, professional design.
+Title: ${title}
+URL: ${url}
+Summary: ${contentSummary}
+${prompt ? `Style: ${prompt}` : ''}
+${logoDataUrl ? 'Include a prominent logo in the header.' : ''}
+Create a full desktop website.`
 
     const project = await stitch.createProject(`Revamp: ${title}`)
     const screen = await project.generate(stitchPrompt, deviceType || 'DESKTOP')
