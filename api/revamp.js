@@ -1,6 +1,7 @@
 import { FirecrawlAppV1 as FirecrawlApp } from '@mendable/firecrawl-js'
 import { Stitch, StitchToolClient } from '@google/stitch-sdk'
 import { injectLogo } from './_utils.js'
+import { generateWithRetry } from './_stitchGenerate.js'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
@@ -66,7 +67,7 @@ ${logoDataUrl ? 'Include a prominent logo in the header.' : ''}
 Create a full desktop website.`
 
     const project = await stitch.createProject(`Revamp: ${title}`)
-    const screen = await project.generate(stitchPrompt, deviceType || 'DESKTOP')
+    const screen = await generateWithRetry(project, stitchPrompt, deviceType)
 
     const htmlUrl = await screen.getHtml()
     const imageUrl = await screen.getImage()
